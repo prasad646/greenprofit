@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Green Profit</title>
+    <style>
+        /* General Styles */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            overflow-x: hidden;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .visible {
+            display: flex;
+        }
+
+        .container, .sell-page, .buy-page {
+            height: 100vh;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        /* Home Page */
+        .container {
+            background: linear-gradient(45deg, #4CAF50, #81C784);
+            color: white;
+            display: flex;
+            text-align: center;
+        }
+
+        .container h1 {
+            font-size: 3rem;
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        .container p {
+            margin: 20px 0;
+            font-size: 1.2rem;
+            animation: slideIn 2s ease-in-out;
+        }
+
+        .container button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background: white;
+            color: #4CAF50;
+            transition: transform 0.2s;
+        }
+
+        .container button:hover {
+            transform: scale(1.1);
+        }
+
+        /* Sell Page */
+        .sell-page {
+            background: linear-gradient(45deg, #FF5722, #FF8A65);
+            color: white;
+            display: none;
+        }
+
+        /* Buy Page */
+        .buy-page {
+            background: linear-gradient(45deg, #2196F3, #64B5F6);
+            color: white;
+            display: none;
+        }
+
+        .page-content h2, .page-content p {
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        .page-content input, .page-content button, .page-content a {
+            margin: 10px 0;
+            padding: 10px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .page-content button {
+            background: white;
+            color: inherit;
+            cursor: pointer;
+        }
+
+        .page-content button:hover {
+            transform: scale(1.1);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Home Page -->
+    <div class="container">
+        <h1>Welcome to Green Profit</h1>
+        <p>"Empowering Farmers, Cultivating a Greener Future"</p>
+        <button class="sell-btn">Sell Crops</button>
+        <button class="buy-btn">Buy Crops</button>
+    </div>
+
+    <!-- Sell Page -->
+    <div class="sell-page">
+        <div class="page-content">
+            <h2>Sell Your Crops</h2>
+            <p>Enter your crop details and start selling to the world.</p>
+            <input id="sellCropName" type="text" placeholder="Crop Name">
+            <input id="sellQuantity" type="number" placeholder="Quantity (kg)">
+            <input id="sellPrice" type="number" placeholder="Price (₹/kg)">
+            <button id="submitSell">Submit</button>
+            <a href="#" id="backToHomeFromSell">Back to Home</a>
+        </div>
+    </div>
+
+    <!-- Buy Page -->
+    <div class="buy-page">
+        <div class="page-content">
+            <h2>Buy Crops</h2>
+            <p>Search for the crops you want to buy and place your order.</p>
+            <input id="buyCropName" type="text" placeholder="Crop Name">
+            <input id="buyQuantity" type="number" placeholder="Quantity (kg)">
+            <button id="submitBuy">Search</button>
+            <a href="#" id="backToHomeFromBuy">Back to Home</a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const sellButton = document.querySelector('.sell-btn'); // Button to go to Sell Page
+            const buyButton = document.querySelector('.buy-btn');  // Button to go to Buy Page
+            const container = document.querySelector('.container'); // Home Page container
+            const sellPage = document.querySelector('.sell-page'); // Sell Page container
+            const buyPage = document.querySelector('.buy-page');  // Buy Page container
+
+            // Function to show Sell Page
+            function showSellPage() {
+                container.classList.remove('visible');
+                container.classList.add('hidden');
+                sellPage.classList.remove('hidden');
+                sellPage.classList.add('visible');
+            }
+
+            // Function to show Buy Page
+            function showBuyPage() {
+                container.classList.remove('visible');
+                container.classList.add('hidden');
+                buyPage.classList.remove('hidden');
+                buyPage.classList.add('visible');
+            }
+
+            // Function to go back to Home Page
+            function goBackToHome() {
+                sellPage.classList.remove('visible');
+                sellPage.classList.add('hidden');
+                buyPage.classList.remove('visible');
+                buyPage.classList.add('hidden');
+                container.classList.remove('hidden');
+                container.classList.add('visible');
+            }
+
+            // Add event listeners for buttons
+            sellButton.addEventListener('click', showSellPage); // Show Sell Page on button click
+            buyButton.addEventListener('click', showBuyPage);   // Show Buy Page on button click
+
+            // Back button from Sell Page
+            document.getElementById('backToHomeFromSell').addEventListener('click', function (e) {
+                e.preventDefault();
+                goBackToHome();
+            });
+
+            // Back button from Buy Page
+            document.getElementById('backToHomeFromBuy').addEventListener('click', function (e) {
+                e.preventDefault();
+                goBackToHome();
+            });
+
+            // Handle Sell form submission
+            document.getElementById('submitSell').addEventListener('click', function () {
+                const cropName = document.getElementById('sellCropName').value.trim();
+                const quantity = document.getElementById('sellQuantity').value.trim();
+                const price = document.getElementById('sellPrice').value.trim();
+
+                if (!cropName || !quantity || !price) {
+                    alert("All fields are required to sell crops!");
+                } else {
+                    alert(`Crop "${cropName}" listed successfully! Quantity: ${quantity} kg, Price: ₹${price}/kg`);
+                }
+            });
+
+            // Handle Buy form submission
+            document.getElementById('submitBuy').addEventListener('click', function () {
+                const cropName = document.getElementById('buyCropName').value.trim();
+                const quantity = document.getElementById('buyQuantity').value.trim();
+
+                if (!cropName || !quantity) {
+                    alert("All fields are required to buy crops!");
+                } else {
+                    alert(`Searching for "${cropName}" with Quantity: ${quantity} kg`);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Green Profit</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(45deg, #4CAF50, #81C784);
+            color: white;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 600px;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            margin: 1rem 0 2rem 0;
+            font-size: 1.2rem;
+        }
+
+        button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background: white;
+            color: #4CAF50;
+            transition: transform 0.2s, background-color 0.3s, color 0.3s;
+        }
+
+        button:hover {
+            transform: scale(1.1);
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        input {
+            margin: 10px 0;
+            padding: 10px;
+            width: 90%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        #dynamic-content button {
+            background: #FF5722;
+            color: white;
+        }
+
+        #dynamic-content button:hover {
+            background: #FF8A65;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="main-page">
+        <h1>Welcome to Green Profit</h1>
+        <p>"Empowering Farmers, Cultivating a Greener Future"</p>
+        <button onclick="navigateTo('sell')">Sell Crops</button>
+        <button onclick="navigateTo('buy')">Buy Crops</button>
+    </div>
+
+    <div class="container hidden" id="dynamic-content">
+        <h1 id="dynamic-title"></h1>
+        <p id="dynamic-description"></p>
+        <div id="form-container"></div>
+        <button onclick="goBack()">Go Back</button>
+    </div>
+
+    <script>
+        function navigateTo(option) {
+            const mainPage = document.getElementById('main-page');
+            const dynamicContent = document.getElementById('dynamic-content');
+            const dynamicTitle = document.getElementById('dynamic-title');
+            const dynamicDescription = document.getElementById('dynamic-description');
+            const formContainer = document.getElementById('form-container');
+
+            // Hide main page and show dynamic content
+            mainPage.classList.add('hidden');
+            dynamicContent.classList.remove('hidden');
+
+            // Set dynamic content based on the option
+            if (option === 'sell') {
+                dynamicTitle.textContent = 'Sell Your Crops';
+                dynamicDescription.textContent = 'Enter your crop details and submit your listing.';
+                formContainer.innerHTML = `
+                    <input type="text" id="cropName" placeholder="Crop Name">
+                    <input type="number" id="quantity" placeholder="Quantity (kg)">
+                    <input type="number" id="price" placeholder="Price (₹/kg)">
+                    <button onclick="submitSell()">Submit</button>
+                `;
+            } else if (option === 'buy') {
+                dynamicTitle.textContent = 'Buy Crops';
+                dynamicDescription.textContent = 'Search for the crops you need and place your order.';
+                formContainer.innerHTML = `
+                    <input type="text" id="cropName" placeholder="Crop Name">
+                    <input type="number" id="quantity" placeholder="Quantity (kg)">
+                    <button onclick="searchCrop()">Search</button>
+                `;
+            }
+        }
+
+        function goBack() {
+            const mainPage = document.getElementById('main-page');
+            const dynamicContent = document.getElementById('dynamic-content');
+
+            // Hide dynamic content and show main page
+            dynamicContent.classList.add('hidden');
+            mainPage.classList.remove('hidden');
+        }
+
+        function submitSell() {
+            const cropName = document.getElementById('cropName').value.trim();
+            const quantity = document.getElementById('quantity').value.trim();
+            const price = document.getElementById('price').value.trim();
+
+            if (!cropName || !quantity || !price) {
+                alert("Please fill all the fields!");
+            } else {
+                alert(`Crop "${cropName}" listed successfully with ${quantity} kg at ₹${price}/kg.`);
+            }
+        }
+
+        function searchCrop() {
+            const cropName = document.getElementById('cropName').value.trim();
+            const quantity = document.getElementById('quantity').value.trim();
+
+            if (!cropName || !quantity) {
+                alert("Please fill all the fields!");
+            } else {
+                alert(`Searching for "${cropName}" with a quantity of ${quantity} kg.`);
+            }
+        }
+    </script>
+</body>
+</html>
